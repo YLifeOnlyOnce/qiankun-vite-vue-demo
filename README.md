@@ -4,10 +4,21 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 
 Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
 
-# vite 接入说明 
-[qiankun 官方未提供](https://qiankun.umijs.org/zh/guide)
+# vite 接入说明 [qiankun 官方未提供](https://qiankun.umijs.org/zh/guide)
 
 qiankun 官方尚未提供 vite 的接入说明，直接使用通用的接入方式会有一系列问题，因此需要借助社区提供的插件 [vite-plugin-qiankun](https://github.com/tengmaoqing/vite-plugin-qiankun) 来实现。
+
+## 项目部署
+
+采用集中部署模式，将构建后的微应用整包部署于microapps下。
+
+```
+├── container/                   # 项目容器
+│   └── container/
+└── microapps/                   # 项目微应用
+    ├── app1/
+    └── app2/
+```
 
 ## 接入方式
 
@@ -48,7 +59,7 @@ export default defineConfig(({ mode }) => {
 
 ```
 
-### 3. 在入口文件注册 qiankun 的生命周期函数配置，设置路由的 basepath
+### 3. 在入口文件注册 qiankun 的生命周期函数配置，设置路由的 basepath 保证微应用架构下页面跳转层级正确
 
 ```javascript
 import { createApp } from "vue";
@@ -76,7 +87,7 @@ const initQianKun = () => {
      */
     mount(props) {
       // 可以通过props读取主应用的参数
-      render(props.container, props.name);
+      render(props.container);
     },
 
     /**
@@ -97,8 +108,6 @@ const router = createRouter({
   routes,
 })
 
-
-
 /**
  * 渲染函数, 区分微前端和独立应用
  */
@@ -112,7 +121,3 @@ const render = (container) => {
 qiankunWindow.__POWERED_BY_QIANKUN__ ? initQianKun() : render();
 
 ```
-
-
-#### npm 问题
-npm install --save-dev --force  @rollup/rollup-darwin-x64
